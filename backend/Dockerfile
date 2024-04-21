@@ -8,6 +8,6 @@ RUN gradle build --no-daemon
 
 FROM openjdk:17-oracle
 
-COPY --from=build /home/gradle/src/build/libs/*.jar /app/application.jar
+COPY --from=build /home/gradle/src/build/libs/tic-tac-toe-0.0.1-SNAPSHOT.jar /app/application.jar
 
 ENTRYPOINT ["java","-jar","/app/application.jar"]
