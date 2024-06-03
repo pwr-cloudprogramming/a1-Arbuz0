@@ -12,9 +12,13 @@ function playerTurn(turn, id) {
 }
 
 function makeAMove(type, xCoordinate, yCoordinate) {
+    const idToken = localStorage.getItem('idToken');
     $.ajax({
         url: url + "/game/gameplay",
         type: 'POST',
+        headers: {
+            'Authorization': `Bearer ${idToken}`
+        },
         dataType: "json",
         contentType: "application/json",
         data: JSON.stringify({
@@ -30,7 +34,7 @@ function makeAMove(type, xCoordinate, yCoordinate) {
         error: function (error) {
             console.log(error);
         }
-    })
+    });
 }
 
 function displayResponse(data) {
@@ -38,7 +42,7 @@ function displayResponse(data) {
     for (let i = 0; i < board.length; i++) {
         for (let j = 0; j < board[i].length; j++) {
             if (board[i][j] === 1) {
-                turns[i][j] = 'X'
+                turns[i][j] = 'X';
             } else if (board[i][j] === 2) {
                 turns[i][j] = 'O';
             }

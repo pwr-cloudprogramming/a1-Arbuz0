@@ -9,13 +9,11 @@
     <link crossorigin="anonymous" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
           integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
-    <!--    libs for stomp and sockjs-->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.4.0/sockjs.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
-    <!--    end libs for stomp and sockjs-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.4.0/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsrsasign/10.1.13/jsrsasign-all-min.js"></script> <!-- Library for decoding JWT -->
 </head>
-<body>
 <body>
 <div class="text-center" id="box">
     <header>
@@ -25,7 +23,7 @@
     <button onclick="create_game()">Create a new game</button>
     <button onclick="connectToRandom()">Connect to random game</button>
     <input id="game_id" placeholder="Paste game id">
-    <button>Connect by game id</button>
+    <button onclick="connectToSpecificGame()">Connect by game id</button>
     <div id="message"></div>
     <ul id="gameBoard">
         <li class="tic" id="0_0"></li>
@@ -43,8 +41,35 @@
         <span>You are playing with <span id="oponentLogin"></span></span>
     </footer>
 </div>
+<script>
+    function validateToken(token) {
+        try {
+            const payload = KJUR.jws.JWS.readSafeJSONString(b64utoutf8(token.split('.')[1]));
+            const currentTime = Math.floor(Date.now() / 1000);
+            console.log('Token payload:', payload);
+            console.log('Current time:', currentTime);
+            console.log('Token expiration time:', payload.exp);
+            return payload.exp > currentTime;
+        } catch (e) {
+            console.error('Error decoding token:', e);
+            return false;
+        }
+    }
+
+    $(document).ready(function() {
+        var idToken = localStorage.getItem('idToken');
+        console.log('Retrieved ID Token:', idToken);
+        if (!idToken || !validateToken(idToken)) {
+            console.log('Redirecting to login.html because token is missing or invalid');
+            // Redirect to login if no token is found or token is invalid/expired
+            window.location.href = 'login.html';
+        } else {
+            // Token is valid, proceed with application logic
+            console.log('User is already logged in');
+        }
+    });
+</script>
 <script src="js/script.js"></script>
 <script src="js/socket_js.js"></script>
-</body>
 </body>
 </html>
