@@ -1,3 +1,4 @@
-// const COGNITO_DOMAIN = 'mytic-tac-toe.auth.us-east-1.amazoncognito.com';
-// const COGNITO_CLIENT_ID = '6jkg57p1l44m5vjshh7nevkkop';
-// const COGNITO_REDIRECT_URI = 'http://localhost:8081/login.html';
+const COGNITO_CLIENT_ID = '7edu8ijmdgu6u6319st1jctj2e';
+const COGNITO_USER_POOL_ID = 'us-east-1_bSZWXHcEv'; // Add your User Pool ID
+const COGNITO_REGION = 'us-east-1'; // Add your region
+

@@ -22,16 +22,14 @@ function connectToSocket(gameId) {
 }
 
 function create_game() {
-    let login = document.getElementById("login").value;
-    if (login == null || login === '') {
-        alert("Please enter login");
-    } else {
-        const idToken = localStorage.getItem('idToken');
+    const idToken = localStorage.getItem('idToken');
+    aws_amplify.Auth.currentAuthenticatedUser().then(user => {
+        const login = user.username;
         $.ajax({
             url: url + "/game/start",
             type: 'POST',
             headers: {
-                'Authorization': 'Bearer ' + idToken // Add Bearer prefix
+                'Authorization': 'Bearer ' + idToken
             },
             dataType: "json",
             contentType: "application/json",
@@ -50,20 +48,20 @@ function create_game() {
                 console.log(error);
             }
         });
-    }
+    }).catch(err => {
+        console.log(err);
+    });
 }
 
 function connectToRandom() {
-    let login = document.getElementById("login").value;
-    if (login == null || login === '') {
-        alert("Please enter login");
-    } else {
-        const idToken = localStorage.getItem('idToken');
+    const idToken = localStorage.getItem('idToken');
+    aws_amplify.Auth.currentAuthenticatedUser().then(user => {
+        const login = user.username;
         $.ajax({
             url: url + "/game/connect/random",
             type: 'POST',
             headers: {
-                'Authorization': 'Bearer ' + idToken // Add Bearer prefix
+                'Authorization': 'Bearer ' + idToken
             },
             dataType: "json",
             contentType: "application/json",
@@ -81,24 +79,24 @@ function connectToRandom() {
                 console.log(error);
             }
         });
-    }
+    }).catch(err => {
+        console.log(err);
+    });
 }
 
 function connectToSpecificGame() {
-    let login = document.getElementById("login").value;
-    if (login == null || login === '') {
-        alert("Please enter login");
+    const gameId = document.getElementById("game_id").value;
+    if (gameId == null || gameId === '') {
+        alert("Please enter game id");
     } else {
-        let gameId = document.getElementById("game_id").value;
-        if (gameId == null || gameId === '') {
-            alert("Please enter game id");
-        } else {
-            const idToken = localStorage.getItem('idToken');
+        const idToken = localStorage.getItem('idToken');
+        aws_amplify.Auth.currentAuthenticatedUser().then(user => {
+            const login = user.username;
             $.ajax({
                 url: url + "/game/connect",
                 type: 'POST',
                 headers: {
-                    'Authorization': 'Bearer ' + idToken // Add Bearer prefix
+                    'Authorization': 'Bearer ' + idToken
                 },
                 dataType: "json",
                 contentType: "application/json",
@@ -119,6 +117,8 @@ function connectToSpecificGame() {
                     console.log(error);
                 }
             });
-        }
+        }).catch(err => {
+            console.log(err);
+        });
     }
 }
